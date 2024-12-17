@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pac-Man Game with Ghost</title>
+    <style>
+        #gameBoard {
+            width: 300px;
+            height: 300px;
+            border: 1px solid black;
+            display: grid;
+            grid-template-columns: repeat(10, 1fr);
+        }
+        .cell {
+            width: 30px;
+            height: 30px;
+            border: 1px solid #ccc;
+            box-sizing: border-box;
+        }
+        .pacman {
+            background-color: yellow;
+            border-radius: 50%;
+        }
+        .ghost {
+            background-color: red;
+            border-radius: 50%;
+        }
+        .dot {
+            background-color: blue;
+            border-radius: 50%;
+            width: 10px;
+            height: 10px;
+            margin: 10px auto;
+        }
+    </style>
+</head>
+<body>
+    <div id="gameBoard"></div>
+    <p>Score: <span id="score">0</span></p>
+    <p id="gameStatus"></p>
+
+    <script>
+        const gameBoard = document.getElementById('gameBoard');
+        const scoreElement = document.getElementById('score');
+        const gameStatusElement = document.getElementById('gameStatus');
+        let pacmanPosition = { x: 0, y: 0 };
+        let ghostPosition = { x: 9, y: 9 };
+        let score = 0;
+
+        // Initialize game
+        function initGame() {
+            pacmanPosition = { x: 0, y: 0 };
+            ghostPosition = { x: 9, y: 9 };
+            score = 0;
+            scoreElement.textContent = score;
+            gameStatusElement.textContent = '';
+            createGameBoard();
+            updatePacmanPosition();
+            updateGhostPosition();
+        }
+
+        // Create game board
+        function createGameBoard() {
+            gameBoard.innerHTML = ''; // Clear previous board
+            for (let i = 0; i < 100; i++) {
+                const cell = document.createElement('div');
+                cell.classList.add('cell');
+                if (Math.random() < 0.3) {
+                    cell.innerHTML = '<div class="dot"></div>';
+                }
+                gameBoard.appendChild(cell);
+            }
+        }
+
+        // Place Pac-Man and Ghost
+        function updatePacmanPosition() {
+            const cells = document.querySelectorAll('.cell');
+            cells.forEach(cell => cell.classList.remove('pacman'));
+            const newPosition = pacmanPosition.y * 10 + pacmanPosition.x;
+            cells[newPosition].classList.add('pacman');
+
+            // Check for dot
+            const dot = cells[newPosition].querySelector('.dot');
+            if (dot) {
+                dot.remove();
+                score++;
+                scoreElement.textContent = score;
+            }
+        }
+
+        function updateGhostPosition() {
+            const cells = document.querySelectorAll('.cell');
+            cells.forEach(cell => cell.classList.remove('ghost'));
+            const newPosition = ghostPosition.y * 10 + ghostPosition.x;
+            cells[newPosition].classList.add('ghost');
+        }
+
+        function moveGhost() {
+            // Simple chase algorithm
+            if (ghostPosition.x < pacmanPosition.x) ghostPosition.x++;
+            else if (ghostPosition.x > pacmanPosition.x) ghostPosition.x--;
+            
+            if (ghostPosition.y < pacmanPosition.y) ghostPosition.y++;
+            else if (ghostPosition.y > pacmanPosition.y) ghostPosition.y--;
+
+            updateGhostPosition();
+        }
+
+        function checkCollision() {
+            if (pacmanPosition.x === ghostPosition.x && pacmanPosition.y === ghostPosition.y) {
+                gameStatusElement.textContent = "Game Over! Ghost caught Pac-Man!";
+                if (confirm("You were caught by the ghost! Would you like to start over?")) {
+                    initGame(); // Restart the game
+                    document.addEventListener('keydown', handleKeyPress); // Reattach key listener
+                }
+                document.removeEventListener('keydown', handleKeyPress); // Remove key listener
+            }
+        }
+
+        // Move Pac-Man with arrow keys
+        function handleKeyPress(e) {
+            switch(e.key) {
+                case 'ArrowUp':
+                    if (pacmanPosition.y > 0) pacmanPosition.y--;
+                    break;
+                case 'ArrowDown':
+                    if (pacmanPosition.y < 9) pacmanPosition.y++;
+                    break;
+                case 'ArrowLeft':
+                    if (pacmanPosition.x > 0) pacmanPosition.x--;
+                    break;
+                case 'ArrowRight':
+                    if (pacmanPosition.x < 9) pacmanPosition.x++;
+                    break;
+            }
+            updatePacmanPosition();
+            moveGhost();
+            checkCollision();
+        }
+
+        // Start the game
+        initGame();
+        document.addEventListener('keydown', handleKeyPress);
+    </script>
+</body>
+</html>

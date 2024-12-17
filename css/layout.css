@@ -1,0 +1,53 @@
+body {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 15px;
+    color: rgb(59, 59, 59);
+    background-color: rgb(218, 199, 178);
+}
+   li {
+        font-size: 14px;
+        font-style: italic;
+        font-weight: normal;
+    }
+    a { color: rgb(73, 122, 236);
+    text-decoration: none;
+    }
+    a:hover {
+        text-decoration: underline;
+        /* font-weight: bold;
+        font-size: 18px; */
+    }
+    a:visited {
+        color: rgb(185, 52, 185);
+    }
+    .resumelistheading {
+        font-weight: bold;
+        font-style: normal;
+    }
+    .underline { text-decoration: underline; }
+    .bold { font-weight: bold;}
+    .justify { text-align: justify;}
+
+    .homebg {
+        background-image: url('../Images/zions.jpg');
+        background-position: top right;
+    }
+
+    .box1 {
+        border-width: 1px;
+        border-style: solid;
+        border-color: gray;
+
+        /* border: 1px solid red; */
+        /* You can just combine all design elements by using border */
+    }
+
+    .box2 {
+        padding: 5px;
+
+    }
+
+    .box3 {
+        margin: 50px;
+/* This is the space between each box */
+    }
